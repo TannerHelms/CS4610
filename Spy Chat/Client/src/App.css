@@ -82,6 +82,7 @@ body {
   width: 100%;
   height: 50vh;
   border: 2px solid var(--blue);
+  overflow-y: auto;
 }
 
 .userInput {
@@ -119,7 +120,13 @@ body {
 
 .messageContainer button {
   width: 60%;
+  height: 40px;
 }
+
+.messageContainer input {
+  height: 40px;
+}
+
 
 .passwordInput {
   width: 60%;

@@ -1,7 +1,15 @@
-const app = require('express')();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const cors = require('cors');
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+
+const app = express();
+app.use(cors());
+const server = http.createServer(app);
+const io = socketIo(server);
 const port = process.env.PORT || 8080;
+
+
 
 io.on('connection', (socket) => {
     var username = '';

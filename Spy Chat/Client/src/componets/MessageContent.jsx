@@ -51,7 +51,7 @@ export default function MessageContent({data, onError, onSuccess}) {
 
     return (
             clicked == false ? 
-            <button onClick={handleClicked}>Click to Decrypt</button> 
+            <button className="decryptButton" onClick={handleClicked}>Click to Decrypt</button> 
             : message == '' ?
             <>
             <div className="messageContent">
