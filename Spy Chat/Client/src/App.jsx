@@ -1,25 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import UsernameBox from './componets/usernameBox'
-import MessageBox from './componets/MessageBox'
+import { useEffect, useState } from "react";
+import "./App.css";
+import UsernameBox from "./componets/UsernameBox";
+import SpyChat from "./componets/SpyChat";
+import { socket } from "./socket";
 
 function App() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
+  const [connection, setConnection] = useState(false);
 
-  const handleUsernameChange = (value) => {
-    setUsername(value);
-  }
+  useEffect(() => {
+    socket.on("connect", (msg) => {
+      setConnection(true);
+    });
 
-  return (
-    <>
-            <div>
-              {username && ( <MessageBox username= {username} /> )}
-              {!username && ( <UsernameBox submitUsername={(value) => handleUsernameChange(value)}/> )}
-            </div>
-    </>
-  )
+    socket.on("disconnect", () => {
+      setConnection(false);
+    });
+  });
+
+  return !connection ? (
+    <p>Connecting to server...</p>
+  ) : username ? (
+    <SpyChat username={username} />
+  ) : (
+    <UsernameBox
+      submitUsername={(value) => setUsername(value)}
+      value={username}
+    />
+  );
 }
 
-export default App
+export default App;

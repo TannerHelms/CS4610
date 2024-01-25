@@ -12,9 +12,10 @@ const port = process.env.PORT || 8080;
 
 
 io.on('connection', (socket) => {
-    var username = '';
-  
+  var username = '';
+
   console.log('user connected');
+
 
   socket.on('username', (data) => {
     username = data;
