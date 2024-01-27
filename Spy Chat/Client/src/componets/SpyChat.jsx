@@ -24,12 +24,12 @@ export default function SpyChat({ username }) {
       socket.emit("message", encryptData(message, password));
     }
   };
+  socket.on("message", (message) => {
+    setMessages(messages.concat(message));
+  });
 
   useEffect(() => {
     socket.emit("username", username);
-    socket.on("message", (message) => {
-      setMessages(messages.concat(message));
-    });
   }, []);
 
   return (

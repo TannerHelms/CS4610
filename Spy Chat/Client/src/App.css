@@ -48,14 +48,19 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
 }
 
 .primary {
   background-color: #6200EE;
 }
 
+input {
+  box-sizing: border-box;
+}
+
 .usernameBox {
-  width: 300;
+  width: 300PX;
 }
 
 .usernameBox input {
@@ -92,6 +97,7 @@ body {
   padding: 8px;
   border-color: var(--blue);
   padding-left: 40px;
+  height: 40px;
 }
 .sendButton {
   margin-top: 10px;
