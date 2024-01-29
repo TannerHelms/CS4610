@@ -1,25 +1,36 @@
 import express from "express";
 import path from "path";
-
+import fs from "fs";
+import { engine } from "express-handlebars";
 
 const app = express();
 app.set("port", 3000);
 const server = require('http').Server(app);
 const io = require("socket.io")(server);
+const DEBUG = process.env.NODE_ENV !== "production";
+const MANIFEST = DEBUG ? {} : JSON.parse(fs.readFileSync("./static/.vite/manifest.json").toString());
 
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
 
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
     next()
 });
 
-app.use((req, res, next) => {
+if (DEBUG) {
+  app.use((req, res, next) => {
     if (req.url.includes(".")) {
         res.redirect(`http://localhost:5173${req.url}`);
     } else {
         next();
     }
-})
+}) 
+} else {
+  app.use(express.static('static'));
+}
+
 
 io.on('connection', (socket: any) => {
     var username = '';
@@ -48,7 +59,12 @@ io.on('connection', (socket: any) => {
   })
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "views/index.html"));
+    res.render('index', {
+      debug: DEBUG,
+      jsBundle: DEBUG ? "" : MANIFEST['src/main.jsx']['file'],
+      cssBundle: DEBUG ? "" : MANIFEST['src/main.jsx']['css'][0],
+      layout : false
+    })
 });
 
 server.listen(3000, () => {
