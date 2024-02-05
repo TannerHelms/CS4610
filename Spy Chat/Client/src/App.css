@@ -86,10 +86,12 @@ input {
 .chatBox {
   width: 100%;
   height: 50vh;
-  border: 2px solid var(--blue);
   overflow-y: auto;
-  background-color: #FFFFFF;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
 } 
+
 
 .userInput {
   width: 100%;
@@ -117,36 +119,41 @@ input {
   font-size: 25px;
 }
 
-.messageContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-top: 10px;
-  padding: 10px;
+.blueMessage {
+  margin-left: auto;
 }
 
-.messageContainer button {
-  width: 60%;
-  height: 40px;
+.blueMessage div {
+  background-color: blue;
+  padding: 2px 20px 2px 20px;
+  color: white;
+  border-radius: 20px;
+  width: fit-content;
+}
+.blueMessage p {
+  text-align: right;
 }
 
-.messageContainer input {
-  height: 40px;
+.blueMessage button {
+background-color: blue;
+color: white;
 }
 
-
-.passwordInput {
-  width: 60%;
+.greyMessage div {
+  background-color: lightgray;
+  padding: 2px 20px 2px 20px;
+  border-radius: 20px;
+  width: fit-content;
 }
 
-.messageContent {
-  width: 60%;
-  text-align: center;
+.greyMessage  button{
+background-color: lightgray;
 }
 
-.messageContent  input{
-  width: 80%;
+.date {
+  text-align: center !important;
 }
+
 
 .m-left {
   margin-left: 10px;

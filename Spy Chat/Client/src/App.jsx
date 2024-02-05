@@ -2,32 +2,29 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import UsernameBox from "./componets/UsernameBox";
 import SpyChat from "./componets/SpyChat";
-import { socket } from "./socket";
+import { io } from "socket.io-client";
 
-function App() {
+export default function App() {
   const [username, setUsername] = useState("");
-  const [connection, setConnection] = useState(false);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    socket.on("connect", (msg) => {
-      setConnection(true);
-    });
+    const s = io();
+    setSocket(s);
+    return () => {
+      s.disconnect;
+      setSocket(null);
+    };
+  }, []);
 
-    socket.on("disconnect", () => {
-      setConnection(false);
-    });
-  });
+  if (!socket) return <p>Connecting to server...</p>;
 
-  return !connection ? (
-    <p>Connecting to server...</p>
-  ) : username ? (
-    <SpyChat username={username} />
-  ) : (
+  if (username) return <SpyChat username={username} socket={socket} />;
+
+  return (
     <UsernameBox
       submitUsername={(value) => setUsername(value)}
       value={username}
     />
   );
 }
-
-export default App;

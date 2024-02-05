@@ -1,14 +1,41 @@
 import express from "express";
-import path from "path";
 import fs from "fs";
 import { engine } from "express-handlebars";
-
-const app = express();
-app.set("port", 3000);
-const server = require('http').Server(app);
-const io = require("socket.io")(server);
+import { createServer } from "node:http";
+import { Server } from "socket.io";
+import * as dotenv from "dotenv";
+dotenv.config();
 const DEBUG = process.env.NODE_ENV !== "production";
 const MANIFEST = DEBUG ? {} : JSON.parse(fs.readFileSync("./static/.vite/manifest.json").toString());
+
+const app = express();
+const server = createServer(app);
+const io = new Server(server);
+
+
+io.on('connection', (socket) => {
+  console.log('user connected');
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  var username = '';
+  socket.on('username', (data) => {
+    username = data;
+  })
+
+  socket.on('message', (data) => {
+    const currentTime = new Date().toLocaleTimeString();
+    const message = {
+        data: data,
+        user: username,
+        date: currentTime
+    }
+    io.emit('message', message);
+  })
+})
+
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
@@ -22,51 +49,26 @@ app.use((req, res, next) => {
 if (DEBUG) {
   app.use((req, res, next) => {
     if (req.url.includes(".")) {
-        res.redirect(`http://localhost:5173${req.url}`);
+        res.redirect(`http://${process.env.ASSET_URL}:5173${req.url}`);
     } else {
         next();
     }
-}) 
+  }) 
 } else {
   app.use(express.static('static'));
 }
 
-
-io.on('connection', (socket: any) => {
-    var username = '';
-  
-    console.log('user connected');
-  
-  
-    socket.on('username', (data: any) => {
-      username = data;
-    })
-  
-    socket.on('message', (data: any) => {
-      const currentTime = new Date().toLocaleTimeString();
-      const message = {
-          data: data,
-          user: username,
-          date: currentTime
-      }
-      console.log(message);
-      io.emit('message', message);
-    })
-  
-    socket.on('disconnect', function () {
-      console.log('user disconnected');
-    });
-  })
 
 app.get("/", (req, res) => {
     res.render('index', {
       debug: DEBUG,
       jsBundle: DEBUG ? "" : MANIFEST['src/main.jsx']['file'],
       cssBundle: DEBUG ? "" : MANIFEST['src/main.jsx']['css'][0],
-      layout : false
+      layout : false,
+      assetURL : process.env.ASSET_URL
     })
 });
 
-server.listen(3000, () => {
-    console.log(`Listening on port 3000...`);
+server.listen(process.env.PORT, () => {
+    console.log(`Listening on port ${process.env.PORT}...`);
 });
