@@ -1,5 +1,4 @@
 import { useState } from "react";
-import MessageContent from "./MessageContent";
 import CryptoJS from "crypto-js";
 
 function Message({ message, error, setError, username }) {
@@ -14,7 +13,9 @@ function Message({ message, error, setError, username }) {
         setMsg(message);
         setSolved(true);
       },
-      (error) => setError(error)
+      (error) => {
+        setError(error);
+      }
     );
   };
 
@@ -38,12 +39,11 @@ function Message({ message, error, setError, username }) {
 export default Message;
 
 function decryptData(text, password, set, error) {
-  console.log(`text: ${text}\npassword: ${password}`);
   try {
     const bytes = CryptoJS.AES.decrypt(text, password);
     const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     set(data);
   } catch {
-    error("Key was incorrect");
+    error("The provided key was incorrect");
   }
 }

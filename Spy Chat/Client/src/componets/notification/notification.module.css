@@ -1,0 +1,82 @@
+.notification {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 20px;
+    background-color: rgba(171, 171, 171, 0.5);
+    min-height: 67px;
+    width: calc(80%);
+    border-radius: 12px;
+    padding: 5px 19px 5px 19px;
+    display: flex;
+    align-items: center;
+    animation:
+        slideDown 1s 1,
+        slideUp 2s 3s 1 forwards;
+}
+
+.hidden {
+    visibility: none;
+}
+
+.notification span {
+    color: black;
+}
+
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    25% {
+        transform: translateY(8%);
+    }
+
+    32% {
+        transform: translateY(-4%);
+    }
+
+    40% {
+        transform: translateY(4%);
+    }
+
+    48% {
+        transform: translateY(-2%);
+    }
+
+    50% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(0%);
+    }
+
+    50% {
+        transform: translateY(-2%);
+    }
+
+    58% {
+        transform: translateY(4%);
+    }
+
+    68% {
+        transform: translateY(-4%);
+    }
+
+    75% {
+        transform: translateY(8%);
+    }
+
+    100% {
+        transform: translateY(-200%);
+    }
+}
